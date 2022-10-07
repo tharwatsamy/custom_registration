@@ -19,7 +19,7 @@ class UserModel {
   final String firstName;
   final String secondName;
   final String dateTime;
-  final String email;
+  final String? email;
   final String? passport;
   final String image;
 

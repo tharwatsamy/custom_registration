@@ -48,9 +48,19 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
               height: 64,
+            ),
+            const Text(
+              'IMEI',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(
+              height: 8,
             ),
             CustomTextField(
               textInputType: TextInputType.name,
@@ -106,9 +116,9 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
                   )
                 : const SizedBox(),
             const CustomSizedBox(),
-            CustomTextFormField(
+            CustomTextField(
               textInputType: TextInputType.emailAddress,
-              onSaved: (value) {
+              onChanged: (value) {
                 email = value;
               },
               hint: 'Email',
@@ -153,7 +163,7 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
           firstName: firstName!,
           secondName: secondName!,
           dateTime: formattedDate!,
-          email: email!,
+          email: email,
           imei: imei!,
           passport: passport ?? '',
           image: imagePath!),
@@ -175,7 +185,7 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
     try {
       imei = await UniqueIdentifier.serial;
     } catch (e) {
-      imei = null ;
+      imei = null;
     }
 
     if (!mounted) return;

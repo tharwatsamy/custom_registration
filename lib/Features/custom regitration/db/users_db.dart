@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -21,7 +22,6 @@ class UsersDataBase {
   Future<Database> _initDataBase(String s) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, s);
-
     return await openDatabase(
       path,
       version: 1,
