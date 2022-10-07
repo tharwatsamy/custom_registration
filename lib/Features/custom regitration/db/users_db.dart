@@ -44,7 +44,10 @@ CREATE TABLE $usersTable (
   ${UserFields.secondName} $textType,
   ${UserFields.imei} $textType,
   ${UserFields.image} $textType,
-  ${UserFields.passport} $nullTextType)
+  ${UserFields.deviceName} $textType,
+  ${UserFields.passport} $nullTextType,
+  ${UserFields.lat} $nullTextType,
+  ${UserFields.long} $nullTextType)
 ''');
   }
 

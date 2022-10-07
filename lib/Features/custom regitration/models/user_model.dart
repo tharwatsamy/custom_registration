@@ -11,6 +11,9 @@ class UserFields {
   static const String email = 'email';
   static const String passport = 'passport';
   static const String image = 'image';
+  static const String lat = 'lat';
+  static const String long = 'long';
+  static const String deviceName = 'deviceName';
 }
 
 class UserModel {
@@ -22,12 +25,18 @@ class UserModel {
   final String? email;
   final String? passport;
   final String image;
+  final String? lat;
+  final String? long;
+  final String deviceName;
 
   UserModel(
       {required this.firstName,
       required this.secondName,
       required this.dateTime,
       this.id,
+      this.lat,
+      this.long,
+      required this.deviceName,
       required this.email,
       required this.imei,
       required this.passport,
@@ -39,14 +48,20 @@ class UserModel {
       UserFields.firstName: firstName,
       UserFields.secondName: secondName,
       UserFields.image: image,
+      UserFields.deviceName: deviceName,
       UserFields.passport: passport,
       UserFields.email: imei.toString(),
       UserFields.imei: imei,
+      UserFields.lat: lat,
+      UserFields.long: long,
     };
   }
 
   static fromJson(json) {
     return UserModel(
+      lat: json[UserFields.lat],
+      long: json[UserFields.long],
+      deviceName: json[UserFields.deviceName],
       firstName: json[UserFields.firstName],
       secondName: json[UserFields.secondName],
       dateTime: json[UserFields.dateTime],

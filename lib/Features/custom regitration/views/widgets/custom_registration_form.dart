@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:customer_registration_screen/Features/custom%20regitration/db/users_db.dart';
 import 'package:customer_registration_screen/Features/custom%20regitration/models/user_model.dart';
 import 'package:customer_registration_screen/Features/custom%20regitration/views/widgets/custom_button.dart';
@@ -5,8 +7,11 @@ import 'package:customer_registration_screen/Features/custom%20regitration/views
 import 'package:customer_registration_screen/Features/custom%20regitration/views/widgets/date_field.dart';
 import 'package:customer_registration_screen/Features/custom%20regitration/views/widgets/image_field.dart';
 import 'package:customer_registration_screen/core/utils/fucntions/pick_image.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
 import '../../../../core/utils/fucntions/check_age.dart';
@@ -158,19 +163,42 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
   }
 
   void saveData() async {
-    int id = await UsersDataBase.instance.create(
-      UserModel(
-          firstName: firstName!,
-          secondName: secondName!,
-          dateTime: formattedDate!,
-          email: email,
-          imei: imei!,
-          passport: passport ?? '',
-          image: imagePath!),
-    );
-    if (mounted) {
-      buildSnackBar('data saved successfully');
+    var status = await Permission.location.request();
+    if (status == PermissionStatus.granted) {
+      var result = await Geolocator.getCurrentPosition();
+
+      String deviceName = await getDeviceName();
+      print(deviceName);
+      int id = await UsersDataBase.instance.create(
+        UserModel(
+            firstName: firstName!,
+            secondName: secondName!,
+            dateTime: formattedDate!,
+            deviceName: deviceName,
+            email: email,
+            imei: imei!,
+            lat: result.latitude.toString(),
+            long: result.longitude.toString(),
+            passport: passport ?? '',
+            image: imagePath!),
+      );
+      if (mounted) {
+        buildSnackBar('data saved successfully');
+      } else {
+        buildSnackBar('Location Permission was denied ');
+      }
     }
+  }
+
+  Future<String> getDeviceName() async {
+     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String deviceName;
+    if (Platform.isAndroid) {
+      deviceName = (await deviceInfo.androidInfo).model!;
+    } else {
+      deviceName = (await deviceInfo.iosInfo).model!;
+    }
+    return deviceName;
   }
 
   void buildSnackBar(text) {

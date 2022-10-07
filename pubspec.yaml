@@ -28,14 +28,17 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.2
+  device_info_plus: ^5.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
   gallery_saver: ^2.3.2
+  geolocator: ^9.0.2
   image_gallery_saver: ^1.7.1
   image_picker: ^0.8.6
   intl: ^0.17.0
   path: any
+  permission_handler: ^10.1.0
   sqflite: ^2.1.0+1
   unique_identifier: any
 
