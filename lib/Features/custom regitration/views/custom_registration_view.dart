@@ -11,7 +11,12 @@ class CustomRegistrationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: CustomRegistrationForm(),
+      body: CustomScrollView(slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: CustomRegistrationForm(),
+        ),
+      ]),
     );
   }
 }
