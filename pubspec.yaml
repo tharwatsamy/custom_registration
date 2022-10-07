@@ -37,6 +37,7 @@ dependencies:
   intl: ^0.17.0
   path: any
   sqflite: ^2.1.0+1
+  unique_identifier: any
 
 dev_dependencies:
   flutter_lints: ^2.0.0

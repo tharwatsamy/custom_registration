@@ -14,13 +14,13 @@ class UserFields {
 }
 
 class UserModel {
-  final int? id;
-  final int imei;
+  int? id;
+  final String imei;
   final String firstName;
   final String secondName;
   final String dateTime;
   final String email;
-  final String passport;
+  final String? passport;
   final String image;
 
   UserModel(

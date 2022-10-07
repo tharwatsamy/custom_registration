@@ -7,6 +7,7 @@ import 'package:customer_registration_screen/Features/custom%20regitration/views
 import 'package:customer_registration_screen/core/utils/fucntions/pick_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:unique_identifier/unique_identifier.dart';
 
 import '../../../../core/utils/fucntions/check_age.dart';
 import 'custom_sized_box.dart';
@@ -20,13 +21,29 @@ class CustomRegistrationForm extends StatefulWidget {
 
 class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
   DateTime? date;
-  String? formattedDate, firstName, secondName, email, imagePath, passport;
+  String? formattedDate,
+      firstName,
+      secondName,
+      email,
+      imagePath,
+      passport,
+      imei;
   bool isPassportVisible = true;
 
   final GlobalKey<FormState> key = GlobalKey<FormState>();
+
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
+
+  @override
+  void initState() {
+    super.initState();
+    initUniqueIdentifierState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
+      autovalidateMode: autovalidateMode,
       key: key,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -35,7 +52,14 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
             const SizedBox(
               height: 64,
             ),
+            CustomTextField(
+              textInputType: TextInputType.name,
+              onChanged: (value) {},
+              hint: imei ?? 'imei',
+            ),
+            const CustomSizedBox(),
             CustomTextFormField(
+              textInputType: TextInputType.name,
               onSaved: (value) {
                 firstName = value;
               },
@@ -43,6 +67,7 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
             ),
             const CustomSizedBox(),
             CustomTextFormField(
+              textInputType: TextInputType.name,
               onSaved: (value) {
                 secondName = value;
               },
@@ -71,6 +96,7 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
                     children: [
                       const CustomSizedBox(),
                       CustomTextFormField(
+                        textInputType: TextInputType.number,
                         onSaved: (value) {
                           passport = value;
                         },
@@ -81,6 +107,7 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
                 : const SizedBox(),
             const CustomSizedBox(),
             CustomTextFormField(
+              textInputType: TextInputType.emailAddress,
               onSaved: (value) {
                 email = value;
               },
@@ -97,11 +124,19 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
             const CustomSizedBox(),
             const Spacer(),
             CustomButton(
-              onTap: () {
+              onTap: () async {
                 if (key.currentState!.validate()) {
                   key.currentState!.save();
 
-                  saveData();
+                  if (imagePath != null || imei == null) {
+                    saveData();
+                  } else {
+                    buildSnackBar('Image and IMEI  are required');
+                  }
+                } else {
+                  autovalidateMode = AutovalidateMode.onUserInteraction;
+
+                  setState(() {});
                 }
               },
             ),
@@ -119,11 +154,32 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
           secondName: secondName!,
           dateTime: formattedDate!,
           email: email!,
-          imei: 123,
-          passport: passport!,
+          imei: imei!,
+          passport: passport ?? '',
           image: imagePath!),
     );
+    if (mounted) {
+      buildSnackBar('data saved successfully');
+    }
+  }
 
-    print(id);
+  void buildSnackBar(text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+      ),
+    );
+  }
+
+  void initUniqueIdentifierState() async {
+    try {
+      imei = await UniqueIdentifier.serial;
+    } catch (e) {
+      imei = null ;
+    }
+
+    if (!mounted) return;
+
+    setState(() {});
   }
 }

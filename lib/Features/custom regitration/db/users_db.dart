@@ -33,6 +33,7 @@ class UsersDataBase {
     // const idType = 'INTEGER PRIMARY KEY AutoIncrement';
 
     const textType = 'TEXT NOT NULL';
+    const nullTextType = 'TEXT';
 
     db.execute('''
 CREATE TABLE $usersTable (
@@ -43,7 +44,7 @@ CREATE TABLE $usersTable (
   ${UserFields.secondName} $textType,
   ${UserFields.imei} $textType,
   ${UserFields.image} $textType,
-  ${UserFields.passport} $textType)
+  ${UserFields.passport} $nullTextType)
 ''');
   }
 
