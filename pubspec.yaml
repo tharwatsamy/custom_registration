@@ -37,6 +37,7 @@ dependencies:
   image_gallery_saver: ^1.7.1
   image_picker: ^0.8.6
   intl: ^0.17.0
+  modal_progress_hud_nsn: ^0.3.0
   path: any
   permission_handler: ^10.1.0
   sqflite: ^2.1.0+1

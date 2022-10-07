@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:customer_registration_screen/Features/custom%20regitration/db/users_db.dart';
 import 'package:customer_registration_screen/Features/custom%20regitration/models/user_model.dart';
+import 'package:customer_registration_screen/Features/custom%20regitration/view_models/cubit/store_data_cubit.dart';
 import 'package:customer_registration_screen/Features/custom%20regitration/views/widgets/custom_button.dart';
 import 'package:customer_registration_screen/Features/custom%20regitration/views/widgets/custom_text_Form_field.dart';
 import 'package:customer_registration_screen/Features/custom%20regitration/views/widgets/date_field.dart';
@@ -9,11 +10,13 @@ import 'package:customer_registration_screen/Features/custom%20regitration/views
 import 'package:customer_registration_screen/core/utils/fucntions/pick_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 
+import '../../../../core/utils/fucntions/build_snackbar.dart';
 import '../../../../core/utils/fucntions/check_age.dart';
 import 'custom_sized_box.dart';
 
@@ -35,6 +38,7 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
       imei;
   bool isPassportVisible = true;
 
+  bool isLoading = false;
   final GlobalKey<FormState> key = GlobalKey<FormState>();
 
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
@@ -139,20 +143,9 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
             const CustomSizedBox(),
             const Spacer(),
             CustomButton(
+              isLoading: isLoading,
               onTap: () async {
-                if (key.currentState!.validate()) {
-                  key.currentState!.save();
-
-                  if (imagePath != null || imei == null) {
-                    saveData();
-                  } else {
-                    buildSnackBar('Image and IMEI  are required');
-                  }
-                } else {
-                  autovalidateMode = AutovalidateMode.onUserInteraction;
-
-                  setState(() {});
-                }
+                validateData();
               },
             ),
             const CustomSizedBox(),
@@ -162,52 +155,30 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
     );
   }
 
-  void saveData() async {
-    var status = await Permission.location.request();
-    if (status == PermissionStatus.granted) {
-      var result = await Geolocator.getCurrentPosition();
+  void validateData() async {
+    if (key.currentState!.validate()) {
+      key.currentState!.save();
 
-      String deviceName = await getDeviceName();
-      print(deviceName);
-      int id = await UsersDataBase.instance.create(
-        UserModel(
+      if (imagePath != null || imei == null) {
+        BlocProvider.of<StoreDataCubit>(context).storeData(UserModel(
             firstName: firstName!,
             secondName: secondName!,
             dateTime: formattedDate!,
-            deviceName: deviceName,
             email: email,
             imei: imei!,
-            lat: result.latitude.toString(),
-            long: result.longitude.toString(),
             passport: passport ?? '',
-            image: imagePath!),
-      );
-      if (mounted) {
-        buildSnackBar('data saved successfully');
+            image: imagePath!));
       } else {
-        buildSnackBar('Location Permission was denied ');
+        buildSnackBar('Image and IMEI  are required' , context );
       }
-    }
-  }
-
-  Future<String> getDeviceName() async {
-     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    String deviceName;
-    if (Platform.isAndroid) {
-      deviceName = (await deviceInfo.androidInfo).model!;
     } else {
-      deviceName = (await deviceInfo.iosInfo).model!;
+      autovalidateMode = AutovalidateMode.onUserInteraction;
+
+      setState(() {});
     }
-    return deviceName;
   }
 
-  void buildSnackBar(text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text),
-      ),
-    );
-  }
+  
 
   void initUniqueIdentifierState() async {
     try {
@@ -215,9 +186,6 @@ class _CustomRegistrationFormState extends State<CustomRegistrationForm> {
     } catch (e) {
       imei = null;
     }
-
-    if (!mounted) return;
-
     setState(() {});
   }
 }

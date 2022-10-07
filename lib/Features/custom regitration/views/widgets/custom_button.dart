@@ -3,13 +3,15 @@ import 'package:customer_registration_screen/Features/custom%20regitration/model
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({Key? key,required this.onTap}) : super(key: key);
+  const CustomButton({Key? key, required this.onTap, required this.isLoading})
+      : super(key: key);
 
   final VoidCallback onTap;
+  final bool isLoading;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap ,
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 48,
@@ -17,14 +19,16 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: Colors.white,
         ),
-        child: const Center(
-          child: Text(
-            'Save',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-            ),
-          ),
+        child: Center(
+          child: isLoading
+              ? const CircularProgressIndicator()
+              : const Text(
+                  'Save',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
         ),
       ),
     );

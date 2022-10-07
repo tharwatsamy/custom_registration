@@ -25,9 +25,9 @@ class UserModel {
   final String? email;
   final String? passport;
   final String image;
-  final String? lat;
-  final String? long;
-  final String deviceName;
+  String? lat;
+  String? long;
+  String? deviceName;
 
   UserModel(
       {required this.firstName,
@@ -36,7 +36,7 @@ class UserModel {
       this.id,
       this.lat,
       this.long,
-      required this.deviceName,
+      this.deviceName,
       required this.email,
       required this.imei,
       required this.passport,
