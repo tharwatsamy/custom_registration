@@ -3,9 +3,11 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class ImageField extends StatelessWidget {
-  const ImageField({Key? key, required this.onTap}) : super(key: key);
+  const ImageField({Key? key, required this.onTap, required this.isImagePicked})
+      : super(key: key);
 
   final VoidCallback onTap;
+  final bool isImagePicked;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -19,13 +21,13 @@ class ImageField extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        child: const Align(
+        child: Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-            padding: EdgeInsets.only(left: 12),
+            padding: const EdgeInsets.only(left: 12),
             child: Text(
-              'Pick Image',
-              style: TextStyle(
+              isImagePicked ? 'Image Picked  successfully' : 'Pick Image',
+              style: const TextStyle(
                 color: Colors.grey,
               ),
             ),

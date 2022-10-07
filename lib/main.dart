@@ -1,8 +1,12 @@
+import 'package:customer_registration_screen/Features/custom%20regitration/db/users_db.dart';
 import 'package:flutter/material.dart';
 
 import 'Features/custom regitration/views/custom_registration_view.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await UsersDataBase.instance.database;
   runApp(const FlutterTestApp());
 }
 
