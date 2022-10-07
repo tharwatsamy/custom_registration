@@ -5,6 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
+	
 	<string>Customer Registration Screen</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
@@ -45,5 +46,11 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+
+	<key>NSPhotoLibraryUsageDescription</key>              
+<string>Need library access to upload images</string> 
+<key>NSCameraUsageDescription</key>
+<string>Need camera access to take pictures</string> 
 </dict>
+
 </plist>
